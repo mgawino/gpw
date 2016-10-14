@@ -1,0 +1,50 @@
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+    .container {
+    position: absolute;
+    top: 200px;
+    left: 200px;
+    border: 1px dashed #999;
+    display: inline-block;
+    width: 200px;
+    padding: 5px;
+    font-size: 150%;
+}
+
+/* The letter and the container rotate at the same speed */
+.container,
+.letter {
+    -webkit-animation:spin 20s linear infinite;
+    -moz-animation:spin 20s linear infinite;
+    animation:spin 20s linear infinite;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+
+/* But the letter rotates in opposite direction */
+.letter {
+    -webkit-animation-direction: reverse; /* Chrome, Safari, Opera */
+    animation-direction: reverse;
+}
