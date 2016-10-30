@@ -18,3 +18,10 @@ def list_companies(request):
     with open('data.json') as file:
         data = ujson.load(file)
         return JsonResponse(dict(companies=list(data.keys())))
+
+
+def list_statistics(request):
+    with open('data.json') as file:
+        data = ujson.load(file)
+        statistics = data['BZWBK'][0].keys()
+        return JsonResponse(dict(statistics=list(statistics)))

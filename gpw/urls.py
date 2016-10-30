@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from gpw.views import IndexView, get_data, list_companies
+from gpw.views import IndexView, get_data, list_companies, list_statistics
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^home/', IndexView.as_view()),
     url(r'^data/', get_data),
-    url(r'^companies/', list_companies)
+    url(r'^companies/', list_companies),
+    url(r'^statistics/', list_statistics)
 ]

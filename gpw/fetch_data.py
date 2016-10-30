@@ -10,9 +10,25 @@ import xlrd
 
 GPW_URL_TEMPLATE = 'https://www.gpw.pl/notowania_archiwalne?type=10&date={date}&fetch.x=28&fetch.y=23'
 RESULT_FILE = 'data.json'
+
+# HEADER ['Data', 'Nazwa', 'ISIN', 'Waluta', 'Kurs otwarcia', 'Kurs max', 'Kurs min',
+#         'Kurs zamknięcia', 'Zmiana', 'Wolumen', 'Liczba Transakcji', 'Obrót',
+#         'Liczba otwartych pozycji', 'Wartość otwartych pozycji', 'Cena nominalna']
+
 COLUMN_TRANSLATION = {
+    'Data': 'date',
     'Nazwa': 'name',
-    'Kurs zamknięcia': 'close_price'
+    'Kurs otwarcia': 'open_price',
+    'Kurs zamknięcia': 'close_price',
+    'Kurs max': 'max_price',
+    'Kurs min': 'min_price',
+    'Cena nominalna': 'nominal_price',
+    'Obrót': 'market_money',
+    'Wolumen': 'volume',
+    'Liczba otwartych pozycji': 'open_positions_num',
+    'Wartość otwartych pozycji': 'open_positions_value',
+    'Zmiana': 'changes',
+    'Waluta': 'currency'
 }
 
 
@@ -38,7 +54,6 @@ def _fetch_data_from_day(date):
         result_dict = {}
         for name, translation in COLUMN_TRANSLATION.items():
             result_dict[translation] = row_dict[name]
-        result_dict['date'] = date_str
         company_name = result_dict.pop('name')
         result[company_name].append(result_dict)
     return result
