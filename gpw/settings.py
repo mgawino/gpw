@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'gpw'
 ]
 
 MIDDLEWARE = [
@@ -73,7 +74,16 @@ WSGI_APPLICATION = 'gpw.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'gpw',
+        'USER': 'gpw',
+        'PASSWORD': 'gpw',
+        'HOST': 'postgres',
+        'PORT': '5432',
+    }
+}
 
 
 # Password validation
