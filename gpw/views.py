@@ -1,27 +1,27 @@
-import ujson
-
 from django.http import JsonResponse
 from django.views.generic import TemplateView
+from gpw.models import Company, Statistics
 
 
 class IndexView(TemplateView):
     template_name = 'index.html'
 
 
-def get_data(request):
-    with open('data.json') as file:
-        data = ujson.load(file)
-        return JsonResponse(data)
+def get_data(request, company_name, stats_name):
+    statistics = Statistics.objects.values(stats_name, 'date')\
+        .filter(company__name=company_name).order_by('date').all()
+    results = []
+    for stats in statistics:
+        results.append({'value': stats[stats_name], 'date': stats['date'].strftime("%Y-%m-%d")})
+    return JsonResponse(dict(results=results))
 
 
 def list_companies(request):
-    with open('data.json') as file:
-        data = ujson.load(file)
-        return JsonResponse(dict(companies=list(data.keys())))
+    company_names = Company.objects.values_list('name', flat=True).all()
+    return JsonResponse(dict(company_names=list(company_names)))
 
 
 def list_statistics(request):
-    with open('data.json') as file:
-        data = ujson.load(file)
-        statistics = data['BZWBK'][0].keys()
-        return JsonResponse(dict(statistics=list(statistics)))
+    stat_names = [f.name for f in Statistics._meta.get_fields()
+                  if f.name not in {'id', 'company', 'date'}]
+    return JsonResponse(dict(stat_names=stat_names))

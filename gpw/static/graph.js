@@ -1,10 +1,8 @@
-// data
-var companyName = null;
-var statsName = null;
-var data = null;
-var companies = null;
-var statistics = null;
-
+var companyNames = null;
+var selectedCompanyName = null;
+var statNames = null;
+var selectedStatName = null;
+var SERVER_URL = 'http://localhost:8000';
 
 function clearGraphs() {
     var elements = document.getElementsByTagName('svg');
@@ -14,7 +12,7 @@ function clearGraphs() {
     }
 }
 
-function createGraph() {
+function createGraph(companyData) {
     clearGraphs();
 
     var parseDate = d3.time.format("%Y-%m-%d").parse;
@@ -23,8 +21,8 @@ function createGraph() {
     height = 270 - margin.top - margin.bottom;
     var x = d3.time.scale().range([0, width]);
     var y = d3.scale.linear().range([height, 0]);
-    var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(5);
-    var yAxis = d3.svg.axis().scale(y).orient("left").ticks(5);
+    var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(7);
+    var yAxis = d3.svg.axis().scale(y).orient("left").ticks(7);
 
     var svg = d3.select("body")
         .append("svg")
@@ -33,20 +31,23 @@ function createGraph() {
         .append("g")
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
-    var companyData = data[companyName];
 
+    companyData.forEach(function(d) {
+      d.date = parseDate(d.date);
+      d.value = +d.value;
+    });
     // Scale the range of the data
     x.domain(d3.extent(companyData, function (d) {
-        return parseDate(d.date);
+        return d.date;
     }));
     y.domain([0, d3.max(companyData, function (d) {
-        return +d[statsName];
+        return d.value;
     })]);
 
     var valueline = d3.svg.line().x(function (d) {
-            return x(parseDate(d.date));
+            return x(d.date);
         }).y(function (d) {
-            return y(+d[statsName]);
+            return y(d.value);
         });
 
     // Add the valueline path.
@@ -75,28 +76,24 @@ function addSelect(collection, clickCallback) {
    select.innerHTML = html;
    select.onchange = function() {
        clickCallback(select.options[select.selectedIndex].value);
-       if (companyName !== null && statsName !== null) {
-           createGraph();
+       if (selectedCompanyName !== null && selectedStatName !== null) {
+           var url = SERVER_URL + '/data/' + selectedCompanyName + '/' + selectedStatName + '/';
+           $.get(url, function(companyData){
+               createGraph(companyData.results);
+           });
        }
    };
    document.body.appendChild(select);
 }
 
 $.when(
-    $.get('http://localhost:8000/data', function(d){
-        data = d;
+    $.get(SERVER_URL + '/company_names', function(data){
+        companyNames = data.company_names;
     }),
-    $.get('http://localhost:8000/companies', function(d){
-        companies = d.companies;
-    }),
-    $.get('http://localhost:8000/statistics', function(d){
-        statistics = d.statistics;
+    $.get(SERVER_URL + '/stat_names', function(data){
+        statNames = data.stat_names;
     })
 ).then(function() {
-    addSelect(companies, function(selectedCompanyName) {
-        companyName = selectedCompanyName;
-    });
-    addSelect(statistics, function(selectedStatsName) {
-        statsName = selectedStatsName;
-    });
+    addSelect(companyNames, function(companyName) { selectedCompanyName = companyName; });
+    addSelect(statNames, function(statName) { selectedStatName = statName; });
 });

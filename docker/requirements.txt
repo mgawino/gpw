@@ -4,3 +4,5 @@ requests==2.7.0
 ujson==1.35
 xlrd==1.0.0
 psycopg2==2.6.2
+scrapy==1.2.1
+furl==0.5.6

@@ -20,7 +20,7 @@ from gpw.views import IndexView, get_data, list_companies, list_statistics
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^home/', IndexView.as_view()),
-    url(r'^data/', get_data),
-    url(r'^companies/', list_companies),
-    url(r'^statistics/', list_statistics)
+    url(r'^data/(?P<company_name>.*)/(?P<stats_name>.*)/$', get_data),
+    url(r'^company_names/', list_companies),
+    url(r'^stat_names/', list_statistics)
 ]
