@@ -1,8 +1,9 @@
+var SERVER_URL = 'http://localhost:8000';
+
 var companyNames = null;
 var selectedCompanyName = null;
 var statNames = null;
 var selectedStatName = null;
-var SERVER_URL = 'http://localhost:8000';
 
 function clearGraphs() {
     var elements = document.getElementsByTagName('svg');

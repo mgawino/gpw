@@ -8,8 +8,9 @@ class IndexView(TemplateView):
 
 
 def get_data(request, company_name, stats_name):
+    isin = Company.objects.values('isin').filter(name=company_name).first()['isin']
     statistics = Statistics.objects.values(stats_name, 'date')\
-        .filter(company__name=company_name).order_by('date').all()
+        .filter(isin=isin).order_by('date').all()
     results = []
     for stats in statistics:
         results.append({'value': stats[stats_name], 'date': stats['date'].strftime("%Y-%m-%d")})
@@ -23,5 +24,5 @@ def list_companies(request):
 
 def list_statistics(request):
     stat_names = [f.name for f in Statistics._meta.get_fields()
-                  if f.name not in {'id', 'date'}]
+                  if f.name not in {'id', 'date', 'isin'}]
     return JsonResponse(dict(stat_names=stat_names))
