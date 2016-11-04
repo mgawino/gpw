@@ -23,5 +23,5 @@ def list_companies(request):
 
 def list_statistics(request):
     stat_names = [f.name for f in Statistics._meta.get_fields()
-                  if f.name not in {'id', 'company', 'date'}]
+                  if f.name not in {'id', 'date'}]
     return JsonResponse(dict(stat_names=stat_names))

@@ -15,12 +15,7 @@ class Company(models.Model):
 
 
 class Statistics(models.Model):
-    company = models.ForeignKey(
-        Company,
-        on_delete=models.CASCADE,
-        related_name='statistics',
-        unique_for_date='date',
-    )
+    isin = models.CharField(max_length=15, unique_for_date='date')
     date = models.DateField()
     open_price = models.FloatField()
     close_price = models.FloatField()
@@ -31,5 +26,5 @@ class Statistics(models.Model):
     volume = models.FloatField()
     open_positions = models.IntegerField()
     open_positions_value = models.FloatField()
-    changes = models.FloatField()
+    change = models.FloatField()
     transactions_num = models.IntegerField()

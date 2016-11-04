@@ -17,7 +17,6 @@ class CompanyItem(scrapy.Item):
 
 
 class GPWCompaniesSpider(scrapy.Spider):
-    name = "gpw_companies"
     _URL_TEMPLATE = 'https://www.gpw.pl/lista_spolek?search=1&query=&country=&voivodship='\
                     '&sector=&ph_tresc_glowna_offset={offset}'
     _COMPANY_INFO_URL_TEMPLATE = 'https://www.gpw.pl/ajaxindex.php?action=GPWListaSp&start=infoTab'\
@@ -46,7 +45,6 @@ class GPWCompaniesSpider(scrapy.Spider):
 
     def _make_parse_company_request(self, company_url):
         isin = furl(company_url).path.segments[-2]
-        assert isin, 'Invalid isin {}'.format(isin)
         company_info_tab_url = self._COMPANY_INFO_URL_TEMPLATE.format(isin=isin)
         request = scrapy.Request(company_info_tab_url, callback=self.parse_company_info_tab)
         request.meta['item'] = CompanyItem(isin=isin)
