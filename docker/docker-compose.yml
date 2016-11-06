@@ -7,10 +7,20 @@ services:
       - POSTGRES_PASSWORD=gpw
       - POSTGRES_DB=gpw
   web:
-    build: .
+    build: images/web
     ports:
       - "8000:8000"
     command: ./entrypoint.sh
+    volumes:
+      - /home/mateusz/Projects/gpw:/gpw
+    links:
+      - postgres
+  notebook:
+    build: images/notebook
+    ports:
+      - "8888:8888"
+    working_dir: /gpw
+    command: "jupyter notebook --port=8888 --ip=0.0.0.0 --no-browser"
     volumes:
       - /home/mateusz/Projects/gpw:/gpw
     links:
