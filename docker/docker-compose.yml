@@ -10,7 +10,7 @@ services:
     build: images/web
     ports:
       - "8000:8000"
-    command: ./entrypoint.sh
+    command: ./run_django_server.sh
     volumes:
       - /home/mateusz/Projects/gpw:/gpw
     links:
@@ -19,8 +19,7 @@ services:
     build: images/notebook
     ports:
       - "8888:8888"
-    working_dir: /gpw
-    command: "jupyter notebook --port=8888 --ip=0.0.0.0 --no-browser"
+    command: ./run_notebook.sh
     volumes:
       - /home/mateusz/Projects/gpw:/gpw
     links:
